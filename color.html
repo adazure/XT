@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #222;
+      padding: 100px;
+      color: #ccc;
+    }
+
+    .hx193 {
+      margin: 5px 0;
+    }
+
+    .hx194 {
+      margin-left: 20px;
+    }
+
+    .hx200 {
+      color: rgb(66, 151, 84);
+    }
+
+    .hx201 {
+      color: rgb(255, 199, 45);
+    }
+
+    .color-blue {
+      color: rgb(177, 103, 177);
+    }
+  </style>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+
+  <div id="code">
+    &lt;!DOCTYPE html&gt;
+    &lt;html lang="en"&gt;
+
+    &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+    &lt;title&gt;Testediliyor&lt;/title&gt;
+    &lt;meta name="description"
+    content="Javascript, React, Angular, Vue, C#, Php, Electron ve bir çok uygulamanın test adresi" /&gt;
+    &lt;meta name="keywords"
+    content="javascript, react, angular, react native, vue, angular, c#, php, electronjs, java, test ediliyor" /&gt;
+    &lt;style&gt;
+    body {
+    background: #111 url(/assets/images/wallpaper/wallpaper_49428893924719.jpg) no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    }
+    &lt;/style&gt;
+    &lt;/head&gt;
+
+    &lt;body&gt;
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Sequi omnis hic aliquid eligendi numquam totam saepe,
+    ducimus quos blanditiis quis ipsum illum a iure vel ad esse. Magnam, ullam doloribus.
+    &lt;/body&gt;
+
+    &lt;/html&gt;
+  </div>
+
+
+  <script>
+
+    const pattern = /<([^>]+?)>/g;
+
+    let text = document.querySelector('#code').textContent;
+    let tags = text.match(pattern);
+
+    let startIndex = 0;
+    let endIndex = 0;
+
+    function matchCloseTag(arr, name) {
+      arr.reverse();
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i] === `</${name}>`) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    function htmlEntities(str) {
+      return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function getAttribute(value) {
+      let n;
+      let v = value;
+      while ((n = /(\w+)\=(\"[^<]+?\")/g.exec(value)) != null) {
+      console.log(n.input);
+        v = v.replace(n.input, `<span class="hx200">${n[1]}</span>=<span class="hx201">${n[2]}</span>`);
+        value = value.replace(n.input, '');
+      }
+      return v;
+    }
+
+    const loop = {};
+    tags = tags.forEach((tag, index) => {
+      const value = tag.match(/\w+[^\<\s\>]/);
+      text = text.replace(new RegExp(value.input), '__temp__' + index);
+
+      let html = `<div class='hx193'>${getAttribute(htmlEntities(value.input)).replace(value[0], `<span class="color-blue">${value[0]}</span>`)}</div>`;
+
+      const isEnd = matchCloseTag(tags.slice(index), value[0]);
+      const end = value.input.substring(0, 2);
+      if (isEnd && end !== '</') {
+        html = `${html}<div class="hx194">`;
+      }
+      else if (end === '</') {
+        html = `</div>${html}`;
+      }
+      loop['__temp__' + index] = html;
+    });
+
+    Object.keys(loop).forEach(key => text = text.replace(key, loop[key]));
+    document.querySelector('#code').innerHTML = text;
+
+
+  </script>
+</body>
+
+</html>

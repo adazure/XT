@@ -99,9 +99,8 @@
       let n;
       let v = value;
       while ((n = /(\w+)\=(\"[^<]+?\")/g.exec(value)) != null) {
-      console.log(n.input);
-        v = v.replace(n.input, `<span class="hx200">${n[1]}</span>=<span class="hx201">${n[2]}</span>`);
-        value = value.replace(n.input, '');
+        v = v.replace(n[0], `<span class="hx200">${n[1]}</span>=<span class="hx201">${n[2]}</span>`);
+        value = value.replace(n[0], '');
       }
       return v;
     }
